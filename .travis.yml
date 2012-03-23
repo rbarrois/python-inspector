@@ -1,4 +1,4 @@
-script: "python setup.py test"
+script: "python src/test_inspector.py"
 notifications:
   email: false
   irc: "irc.freenode.org#XelNext"
