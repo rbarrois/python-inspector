@@ -235,6 +235,11 @@ class Frame(object):
         else:
             return self.fun.__name__
 
+    def __eq__(self, other):
+        if not isinstance(other, Frame):
+            return NotImplemented
+        return self.fun == other.fun
+
     def __repr__(self):
         return '<Frame for %s%s at %s from %s:%d>' % (
             self.function_name,
