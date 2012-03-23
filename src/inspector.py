@@ -207,14 +207,27 @@ class Frame(object):
     def unwrap_decorators(self, decorators):
         """Finds all possible decorator chains, attaching to known decorators."""
         code_to_decorator, ambiguous_code = map_code_objects(decorators)
-        def find_decorator(frame):
+        def find_decorator(frame, used_codes):
             for code in extract_code_objects(frame.fun):
+                if code in used_codes:
+                    # That code was already used in this chain, we won't reuse
+                    # it (would otherwise trigger detection of the first
+                    # decorator in every frame
+                    continue
+
                 if code in code_to_decorator:
+                    used_codes.append(code)
                     return frame, code_to_decorator[code]
             return frame, None
 
         for unwrap_chain in self.unwrap():
-            yield [find_decorator(frame) for frame in unwrap_chain]
+            # List code used to match decorators in this chain.
+            used_codes = []
+            # Since a given code object can match only one decorator, we must
+            # start from the innermost frame.
+            rev = [find_decorator(frame, used_codes) for frame in reversed(unwrap_chain)]
+            rev.reverse()
+            yield rev
 
     def find_decorator(self, decorator):
         """Finds all (sub)frames potentially using a given decorator."""
