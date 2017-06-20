@@ -3,7 +3,12 @@
 
 import functools
 import unittest
-import StringIO
+import sys
+
+if sys.version_info[0] <= 2:
+    import StringIO as io
+else:
+    import io
 
 import inspector
 
@@ -12,7 +17,7 @@ class PrinterTestCase(unittest.TestCase):
     """Tests FunctionPrinter and CodePrinter."""
 
     def setUp(self):
-        self.out = StringIO.StringIO()
+        self.out = io.StringIO()
 
     def tearDown(self):
         self.out.close()
