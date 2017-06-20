@@ -1,4 +1,14 @@
+sudo: false
+language: python
+
 script: "python src/test_inspector.py"
+
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
 notifications:
   email: false
   irc: "irc.freenode.org#XelNext"
