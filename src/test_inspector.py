@@ -226,6 +226,10 @@ class CodeObjectsExtractionTestCase(unittest.TestCase):
 class FrameTestCase(unittest.TestCase):
     """Tests inspector.frame-related functions."""
 
+    if sys.version_info[0] <= 2:
+        def assertCountEqual(self, left, right):
+            return self.assertItemsEqual(left, right)
+
     def test_simple_function(self):
         def simple_fun():
             return 42
@@ -296,7 +300,7 @@ class FrameTestCase(unittest.TestCase):
         self.assertEqual('(foo)', f.argspec)
 
         # Unwrap: two paths, one with enclosed_fun and one with alt_enclosed_fun
-        self.assertEqual([
+        self.assertCountEqual([
                 [f, inspector.Frame(enclosed_fun)],
                 [f, inspector.Frame(alt_enclosed_fun)]
             ], list(f.unwrap()))
